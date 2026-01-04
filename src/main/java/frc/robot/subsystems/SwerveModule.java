@@ -39,13 +39,17 @@ public class SwerveModule extends SubsystemBase{
         double desiredAng = desireState.theta();
         
         double normalDeltaAngle = Func.shortestPath(currentAng, desiredAng);
-        double flippedDeltaAngle = Func.shortestPath(desiredAng, Func.modulo(desiredAng + 180, 360));
+        double flippedDeltaAngle = Func.shortestPath(currentAng, Func.modulo(desiredAng + 180, 360));
 
+        if (flippedDeltaAngle < normalDeltaAngle)
+        {
+            m_driveMotor.set(-m_driveMotor.get());
+        }
         double deltaAngle = Math.min(Math.abs(normalDeltaAngle), Math.abs(flippedDeltaAngle));
 
         m_steerPID.activate(currentAng + deltaAngle, ControlType.kPos);
 
-        double currentSpeed = desireState.mag();
+        double currentSpeed = m_driveMotor.get();
 
         m_driveEverPID.activate(currentSpeed * Math.cos(deltaAngle), ControlType.kVel);
     }

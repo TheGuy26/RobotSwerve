@@ -1,7 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.studica.frc.AHRS;
+
 import frc.robot.Math.Vector2d;
 import frc.robot.Utils.EverKit.EverAbsEncoder;
+import frc.robot.Utils.EverKit.EverEncoder;
+import frc.robot.Utils.EverKit.EverMotorController;
 import frc.robot.Utils.EverKit.Implementations.Encoders.EverCANCoder;
 import frc.robot.Utils.EverKit.Implementations.Encoders.EverSparkInternalEncoder;
 import frc.robot.Utils.EverKit.Implementations.Encoders.EverTalonFXInternalEncoder;
@@ -9,6 +14,7 @@ import frc.robot.Utils.EverKit.Implementations.MotorControllers.EverSparkMax;
 import frc.robot.Utils.EverKit.Implementations.MotorControllers.EverTalonFX;
 import frc.robot.Utils.EverKit.Implementations.PIDControllers.EverSparkMaxPIDController;
 import frc.robot.Utils.EverKit.Implementations.PIDControllers.EverTalonFXPIDController;
+import com.studica.frc.AHRS.NavXComType;
 
 /*
  * TL = Top Left
@@ -20,6 +26,8 @@ import frc.robot.Utils.EverKit.Implementations.PIDControllers.EverTalonFXPIDCont
 public interface swerveConst {
     public static final double MAX_SPEED = 2; // meter per sec
     public static final double MAX_ANGULAR_SPEED = 180; // deg per sec
+
+    SwerveModule[] MODULES = new SwerveModule[4];
 
     // motor controllers
     public static final EverTalonFX 
@@ -93,6 +101,8 @@ public interface swerveConst {
     
     public static final double WHEEL_PERIMETER = Math.PI * 0.09;
 
+    public static final AHRS GYRO = new AHRS(NavXComType.kMXP_SPI);
+
     public int GYRO_DIRECTION = -1; // -1 is clockwise
 
     //chassis dimentions
@@ -108,4 +118,55 @@ public interface swerveConst {
                         
     
     public static final Vector2d[] MODULES_POSITIONS = { TL_VEC, TR_VEC, DL_VEC, DR_VEC};
+
+     public static void config(){
+        for (EverMotorController driveMotor : DRIVE_MOTORS) {
+                driveMotor.restoreFactoryDefaults();
+                driveMotor.setInverted(false);
+                driveMotor.setIdleMode(EverMotorController.IdleMode.kCoast);
+        }
+           
+        for (EverMotorController steerMotor : STEER_MOTORS) {
+               steerMotor.restoreFactoryDefaults();
+               steerMotor.setIdleMode(EverMotorController.IdleMode.kCoast);
+        }
+           
+        for(EverEncoder driveEncoder : DRIVE_ENCODERS){
+               driveEncoder.setVelConversionFactor(DRIVE_GEAR_RAIO * WHEEL_PERIMETER);
+               driveEncoder.setPosConversionFactor(DRIVE_GEAR_RAIO * WHEEL_PERIMETER);
+        }
+   
+        for(EverEncoder steerEncoder : STEER_ENCODERS){
+               steerEncoder.setPosConversionFactor(STEER_GEAR_RATIO * 360.0); //rotations to degrees
+        }
+   
+        for(EverAbsEncoder absEncoder : ABS_ENCODERS){
+               absEncoder.setPosConversionFactor(360.0);
+        }
+   
+        ABS_ENCODERS[0].setOffset(84.55078887939453);
+        ABS_ENCODERS[1].setOffset(136.75782775878906);
+        ABS_ENCODERS[2].setOffset(-149.23828125);
+        ABS_ENCODERS[3].setOffset(-31.992191314697266);
+   
+        for (EverTalonFXPIDController velocityController : WHEEL_VELOCITY_CONTROLLERS) {
+               Slot0Configs configs = new Slot0Configs();
+               configs.kP = WHEEL_VELOCITY_KP;
+               configs.kI = WHEEL_VELOCITY_KI;
+               configs.kD = WHEEL_VELOCITY_KD;
+               configs.kS = WHEEL_VELOCITY_KS;
+               configs.kV = WHEEL_VELOCITY_KV;
+               velocityController.setPID(configs);   
+        }
+   
+        for (EverSparkMaxPIDController angleController : WHEEL_ANGLE_CONTROLLERS) {
+                angleController.setPID(WHEEL_ANGLE_KP, WHEEL_ANGLE_KI, WHEEL_ANGLE_KD);      
+        }
+
+        MODULES[0] = new SwerveModule(swerveConst.TL_DRIVE_MOTOR, swerveConst.TL_VELOCITY_CONTROLLER, swerveConst.TL_DRIVE_ENCODER, swerveConst.TL_STEER_MOTOR, swerveConst.TL_ANGLE_CONTROLLER, swerveConst.TL_STEER_ENCODER, swerveConst.ABS_ENCODERS[0]);
+        MODULES[1] = new SwerveModule(swerveConst.TR_DRIVE_MOTOR, swerveConst.TR_VELOCITY_CONTROLLER, swerveConst.TR_DRIVE_ENCODER, swerveConst.TR_STEER_MOTOR, swerveConst.TR_ANGLE_CONTROLLER, swerveConst.TR_STEER_ENCODER, swerveConst.ABS_ENCODERS[1]);
+        MODULES[2] = new SwerveModule(swerveConst.DL_DRIVE_MOTOR, swerveConst.DL_VELOCITY_CONTROLLER, swerveConst.DL_DRIVE_ENCODER, swerveConst.DL_STEER_MOTOR, swerveConst.DL_ANGLE_CONTROLLER, swerveConst.DL_STEER_ENCODER, swerveConst.ABS_ENCODERS[2]);
+        MODULES[3] = new SwerveModule(swerveConst.DR_DRIVE_MOTOR, swerveConst.DR_VELOCITY_CONTROLLER, swerveConst.DR_DRIVE_ENCODER, swerveConst.DR_STEER_MOTOR, swerveConst.DR_ANGLE_CONTROLLER, swerveConst.DR_STEER_ENCODER, swerveConst.ABS_ENCODERS[3]);
+    }
+
 }

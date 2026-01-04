@@ -1,13 +1,14 @@
 package frc.robot.subsystems;
 
+import com.studica.frc.AHRS;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Math.Vector2d;
-import frc.robot.Utils.EverKit.EverGyro;
 
 public class Swerve extends SubsystemBase{
-    private static Swerve m_swerve;
+    private static Swerve m_swerve = new Swerve();
     
-    private EverGyro gyro;
+    private AHRS gyro;
 
     private Vector2d driveVector;
 
@@ -15,18 +16,25 @@ public class Swerve extends SubsystemBase{
 
     public Swerve()
     {
-        
+        swerveConst.config();
+        setModuleVectors(swerveConst.MODULES_POSITIONS);
+        swerveModules = swerveConst.MODULES;
+        gyro = swerveConst.GYRO;
     }
 
+    public static Swerve getInstance() {
+        return m_swerve;
+    }
+    
     public void drive(Vector2d leftStickVector, double rightStickVectorVel)
     {
         // set drive vector
         driveVector = leftStickVector.copy().mul(swerveConst.MAX_SPEED);
-        driveVector.rotate(Math.toRadians(gyro.getYaw()) * swerveConst.GYRO_DIRECTION); // gyro axis is false
+        driveVector.rotate(Math.toRadians(gyro.getYaw()) * swerveConst.GYRO_DIRECTION); // gyro axis is supposed to be right
 
         // update rotation vectors
         for (Vector2d rotationVector : swerveConst.MODULES_POSITIONS) {
-            rotationVector.mul(rightStickVectorVel * convertToMPerSec(swerveConst.MAX_ANGULAR_SPEED));
+            rotationVector.mul(rightStickVectorVel * swerveConst.MAX_ANGULAR_SPEED);
         }
 
         // apply vector to module
@@ -35,7 +43,7 @@ public class Swerve extends SubsystemBase{
         }
     }
 
-    public static void setModuleVectores(Vector2d moduleVectors[]) {
+    public static void setModuleVectors(Vector2d moduleVectors[]) {
         for (Vector2d moduleVector : moduleVectors) {
             moduleVector.normalise();
             moduleVector.rotate(Math.toRadians(90));
