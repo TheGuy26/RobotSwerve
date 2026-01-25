@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Math.Vector2d;
 import frc.robot.subsystems.Swerve;
@@ -29,6 +31,11 @@ public class drive extends Command {
         double leftStickXInput = m_leftXInput.get();
         double leftStickYInput = m_leftYInput.get();
         double angularVelocity = m_rightVelocity.get();
+
+        Logger.recordOutput("drive/leftStickX", leftStickXInput);
+        Logger.recordOutput("drive/leftStickY", leftStickYInput);
+        Logger.recordOutput("drive/angularVelocity", angularVelocity);
+
 
         if (Math.abs(leftStickXInput) < STICKDRIFT) {
             leftStickXInput = 0;

@@ -6,12 +6,16 @@ package frc.robot;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Utils.EverKit.Periodic;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
 
   public static ArrayList<Periodic> robotPeriodicFuncs = new ArrayList<Periodic>();
   public static ArrayList<Periodic> teleopPeriodicFuncs = new ArrayList<Periodic>();
@@ -30,6 +34,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void robotInit() {
+    Logger.recordMetadata("RobotSwrerve*TEST*", "2025");
+    Logger.addDataReceiver(new WPILOGWriter());
+    Logger.addDataReceiver(new NT4Publisher());
+    Logger.start();
   }
 
   @Override

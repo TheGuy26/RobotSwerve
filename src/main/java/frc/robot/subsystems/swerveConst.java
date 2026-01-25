@@ -31,14 +31,14 @@ public interface swerveConst {
 
     // motor controllers
     public static final EverTalonFX 
-            TL_DRIVE_MOTOR = new EverTalonFX(18),
-            TR_DRIVE_MOTOR = new EverTalonFX(16), 
-            DL_DRIVE_MOTOR = new EverTalonFX(1),  
-            DR_DRIVE_MOTOR = new EverTalonFX(3); 
+            TL_DRIVE_MOTOR = new EverTalonFX(16),
+            TR_DRIVE_MOTOR = new EverTalonFX(20), 
+            DL_DRIVE_MOTOR = new EverTalonFX(5),  
+            DR_DRIVE_MOTOR = new EverTalonFX(12); 
     
     public static final EverSparkMax 
             TL_STEER_MOTOR = new EverSparkMax(11),
-            TR_STEER_MOTOR = new EverSparkMax(17),
+            TR_STEER_MOTOR = new EverSparkMax(13),
             DL_STEER_MOTOR = new EverSparkMax(10),
             DR_STEER_MOTOR = new EverSparkMax(2);
 
