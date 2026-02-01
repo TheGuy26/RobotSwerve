@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Math.Func;
 import frc.robot.Math.Vector2d;
@@ -51,7 +53,12 @@ public class SwerveModule extends SubsystemBase{
 
         double currentSpeed = m_driveMotor.get();
 
+        if (currentSpeed == 0)
+            currentSpeed = desireState.mag();
+
+
         m_driveEverPID.activate(currentSpeed * Math.cos(deltaAngle), ControlType.kVel);
+        Logger.recordOutput("SwerveModule/drive_pid_input", currentSpeed * Math.cos(deltaAngle));
     }
 
 

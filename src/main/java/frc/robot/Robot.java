@@ -11,6 +11,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Utils.EverKit.Periodic;
@@ -25,6 +26,8 @@ public class Robot extends LoggedRobot {
 
   private Command m_autonomousCommand;
 
+  private final XboxController xboxController = new XboxController(0);
+
   private final RobotContainer m_robotContainer;
 
   public Robot() {
@@ -34,11 +37,16 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    Logger.recordOutput("Drive/leftStickX", xboxController.getLeftX());
+    Logger.recordOutput("Drive/leftStickY", xboxController.getLeftY());
+    Logger.recordOutput("Drive/angularVelocity", xboxController.getRightX());
+
   }
 
   @Override
   public void robotInit() {
-    Logger.recordMetadata("RobotSwrerve*TEST*", "2025");
+    Logger.recordMetadata("RobotSwrerveTEST", "2025");
     Logger.addDataReceiver(new WPILOGWriter());
     Logger.addDataReceiver(new NT4Publisher());
     Logger.start();

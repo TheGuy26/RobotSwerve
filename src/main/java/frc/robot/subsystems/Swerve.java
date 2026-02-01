@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,6 +33,10 @@ public class Swerve extends SubsystemBase{
         // set drive vector
         driveVector = leftStickVector.copy().mul(swerveConst.MAX_SPEED);
         driveVector.rotate(Math.toRadians(gyro.getYaw()) * swerveConst.GYRO_DIRECTION); // gyro axis is supposed to be right
+        Logger.recordOutput("Swerve/gyro_yaw", gyro.getYaw());
+        Logger.recordOutput("Swerve/drive_vector_X", driveVector.x);
+        Logger.recordOutput("Swerve/drive_vector_Y", driveVector.y);
+
 
         // update rotation vectors
         for (Vector2d rotationVector : swerveConst.MODULES_POSITIONS) {
