@@ -43,6 +43,10 @@ public class SwerveModule extends SubsystemBase{
         double normalDeltaAngle = Func.shortestPath(currentAng, desiredAng);
         double flippedDeltaAngle = Func.shortestPath(currentAng, Func.modulo(desiredAng + 180, 360));
 
+        Logger.recordOutput("SwerveModule/normalDeltaAngle", normalDeltaAngle);
+        Logger.recordOutput("SwerveModule/normalDeltaAngle", flippedDeltaAngle);
+
+
         if (flippedDeltaAngle < normalDeltaAngle)
         {
             m_driveMotor.set(-m_driveMotor.get());

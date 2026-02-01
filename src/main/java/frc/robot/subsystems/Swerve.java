@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.text.Format;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.studica.frc.AHRS;
@@ -46,7 +48,12 @@ public class Swerve extends SubsystemBase{
         // apply vector to module
         for (int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].set(driveVector.copy().add(swerveConst.MODULES_POSITIONS[i]));
+            String desired_state = String.format("%f %f", driveVector.copy().add(swerveConst.MODULES_POSITIONS[i]), driveVector.copy().add(swerveConst.MODULES_POSITIONS[i]));
+            Logger.recordOutput("Swerve/desired_state_" + i, desired_state);
+
         }
+        
+
     }
 
     public static void setModuleVectors(Vector2d moduleVectors[]) {
