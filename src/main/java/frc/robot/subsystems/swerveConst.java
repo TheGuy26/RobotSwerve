@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.studica.frc.AHRS;
 
@@ -80,9 +82,9 @@ public interface swerveConst {
     // chassis encoders 
     public static final EverAbsEncoder
             TL_ABS_ENCODER = new EverCANCoder(1),
-            TR_ABS_ENCODER = new EverCANCoder(0),
+            TR_ABS_ENCODER = new EverCANCoder(21),
             DL_ABS_ENCODER = new EverCANCoder(3),
-            DR_ABS_ENCODER = new EverCANCoder(2);
+            DR_ABS_ENCODER = new EverCANCoder(4);
 
     public static final EverAbsEncoder[] ABS_ENCODERS = {TL_ABS_ENCODER, TR_ABS_ENCODER, DL_ABS_ENCODER, DR_ABS_ENCODER};
 
@@ -148,6 +150,11 @@ public interface swerveConst {
         ABS_ENCODERS[1].setOffset(136.75782775878906);
         ABS_ENCODERS[2].setOffset(-149.23828125);
         ABS_ENCODERS[3].setOffset(-31.992191314697266);
+
+        /* Logger.recordOutput("SwerveConst/TL_absEncoder", ABS_ENCODERS[0].getOffset());
+        Logger.recordOutput("SwerveConst/TR_absEncoder", ABS_ENCODERS[1].getOffset());
+        Logger.recordOutput("SwerveConst/DL_absEncoder", ABS_ENCODERS[2].getOffset());
+        Logger.recordOutput("SwerveConst/DR_absEncoder", ABS_ENCODERS[3].getOffset()); */
    
         for (EverTalonFXPIDController velocityController : WHEEL_VELOCITY_CONTROLLERS) {
                Slot0Configs configs = new Slot0Configs();
