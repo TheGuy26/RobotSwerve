@@ -47,7 +47,7 @@ public class SwerveModule extends SubsystemBase{
         Logger.recordOutput("SwerveModule/normalDeltaAngle", flippedDeltaAngle);
 
 
-        if (flippedDeltaAngle < normalDeltaAngle)
+        if (Math.abs(flippedDeltaAngle) < Math.abs(normalDeltaAngle))
         {
             m_driveMotor.set(-m_driveMotor.get());
         }
@@ -57,8 +57,9 @@ public class SwerveModule extends SubsystemBase{
 
         double currentSpeed = m_driveMotor.get();
 
-        if (currentSpeed == 0)
+        if (currentSpeed == 0) {
             currentSpeed = desireState.mag();
+        }
 
 
         m_driveEverPID.activate(currentSpeed * Math.cos(deltaAngle), ControlType.kVel);

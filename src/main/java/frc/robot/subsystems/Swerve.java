@@ -42,7 +42,8 @@ public class Swerve extends SubsystemBase{
 
         // update rotation vectors
         for (Vector2d rotationVector : swerveConst.MODULES_POSITIONS) {
-            rotationVector.mul(rightStickVectorVel * swerveConst.MAX_ANGULAR_SPEED);
+            rotationVector.normalise();
+            rotationVector.mul(rightStickVectorVel * convertToMPerSec(swerveConst.MAX_ANGULAR_SPEED));
         }
 
         // apply vector to module
