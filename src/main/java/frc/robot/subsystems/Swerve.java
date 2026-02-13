@@ -33,11 +33,14 @@ public class Swerve extends SubsystemBase{
     public void drive(Vector2d leftStickVector, double rightStickVectorVel)
     {
         // set drive vector
-        driveVector = leftStickVector.copy().mul(swerveConst.MAX_SPEED);
+        driveVector = leftStickVector.copy();
+        driveVector.mul(swerveConst.MAX_SPEED);
         driveVector.rotate(Math.toRadians(gyro.getYaw()) * swerveConst.GYRO_DIRECTION); // gyro axis is supposed to be right
         Logger.recordOutput("Swerve/gyro_yaw", gyro.getYaw());
-        Logger.recordOutput("Swerve/drive_vector_X", driveVector.x);
-        Logger.recordOutput("Swerve/drive_vector_Y", driveVector.y);
+        Logger.recordOutput("Swerve/left_stick_vector_X", leftStickVector.x);
+        Logger.recordOutput("Swerve/left_stick_vector_Y", leftStickVector.y);
+        Logger.recordOutput("Swerve/drive_vector", driveVector.toString());
+        Logger.recordOutput("Swerve/drive_vector_mag", driveVector.mag());
 
 
         // update rotation vectors
@@ -49,11 +52,13 @@ public class Swerve extends SubsystemBase{
         // apply vector to module
         for (int i = 0; i < swerveModules.length; i++) {
             swerveModules[i].set(driveVector.copy().add(swerveConst.MODULES_POSITIONS[i]));
-            String desired_state = String.format("%f %f", driveVector.copy().add(swerveConst.MODULES_POSITIONS[i]), driveVector.copy().add(swerveConst.MODULES_POSITIONS[i]));
-            Logger.recordOutput("Swerve/desired_state_" + i, desired_state);
-
         }
         
+        Vector2d tempDriveVector = driveVector.copy();
+        tempDriveVector.add(swerveConst.MODULES_POSITIONS[0]);
+        Logger.recordOutput("Swerve/desired_state_" + 0, tempDriveVector.x);
+        //Logger.recordOutput("Swerve/driveVector_" + 0, driveVector.toString());
+        Logger.recordOutput("Swerve/module_position_" + 0, swerveConst.MODULES_POSITIONS[0].toString());
 
     }
 

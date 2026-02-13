@@ -38,13 +38,13 @@ public class SwerveModule extends SubsystemBase{
 
     public void set(Vector2d desireState) {
         double currentAng = m_angleEncoder.getPos();
-        double desiredAng = desireState.theta();
+        double desiredAng = Math.toDegrees(desireState.theta());
         
         double normalDeltaAngle = Func.shortestPath(currentAng, desiredAng);
         double flippedDeltaAngle = Func.shortestPath(currentAng, Func.modulo(desiredAng + 180, 360));
 
         Logger.recordOutput("SwerveModule/normalDeltaAngle", normalDeltaAngle);
-        Logger.recordOutput("SwerveModule/normalDeltaAngle", flippedDeltaAngle);
+        Logger.recordOutput("SwerveModule/flippedDeltaAngle", flippedDeltaAngle);
 
 
         if (Math.abs(flippedDeltaAngle) < Math.abs(normalDeltaAngle))
@@ -53,17 +53,11 @@ public class SwerveModule extends SubsystemBase{
         }
         double deltaAngle = Math.min(Math.abs(normalDeltaAngle), Math.abs(flippedDeltaAngle));
 
-        m_steerPID.activate(currentAng + deltaAngle, ControlType.kPos);
-
-        double currentSpeed = m_driveMotor.get();
-
-        if (currentSpeed == 0) {
-            currentSpeed = desireState.mag();
-        }
+        //m_steerPID.activate(currentAng + deltaAngle, ControlType.kPos);
 
 
-        m_driveEverPID.activate(currentSpeed * Math.cos(deltaAngle), ControlType.kVel);
-        Logger.recordOutput("SwerveModule/drive_pid_input", currentSpeed * Math.cos(deltaAngle));
+        //m_driveEverPID.activate(desireState.mag() * Math.cos(deltaAngle), ControlType.kVel);
+        Logger.recordOutput("SwerveModule/drive_pid_input", desireState.mag() * Math.cos(deltaAngle));
     }
 
 

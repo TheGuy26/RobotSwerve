@@ -119,7 +119,7 @@ public interface swerveConst {
                         DR_VEC = new Vector2d(CHASSIS_WIDTH / 2, -CHASSIS_LENTGH / 2);
                         
     
-    public static final Vector2d[] MODULES_POSITIONS = { TL_VEC, TR_VEC, DL_VEC, DR_VEC};
+    public static final Vector2d[] MODULES_POSITIONS = {TL_VEC, TR_VEC, DL_VEC, DR_VEC};
 
      public static void config(){
         for (EverMotorController driveMotor : DRIVE_MOTORS) {
